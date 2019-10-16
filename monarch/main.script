@@ -1,0 +1,32 @@
+local monarch = require "monarch.monarch"
+
+go.property("init_monarch", hash("splash_screen"))
+
+local msg_preload = hash("preload")
+local msg_room_menu = hash("rm_menu")
+local msg_dialogue = hash("pu_dialogue")
+
+function init(self)
+	--monarch.debug()
+	msg.post("#", "init_monarch")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == msg_init_monarch then
+		monarch.show(self.init_monarch)
+
+	elseif message_id == msg_preload then
+		local screen = message
+		monarch.preload(screen.id, function(self)
+			msg.post(sender, "preloaded_"..screen.id)
+		end)
+		
+	elseif message_id == msg_dialogue then
+		local dialogue = message
+		monarch.show("pu_dialogue", nil, dialogue)
+		
+	elseif message_id == msg_room_menu then
+		monarch.show("rm_menu", { clear = true })
+		
+	end
+end
