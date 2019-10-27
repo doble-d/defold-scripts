@@ -1,10 +1,13 @@
 local monarch = require "monarch.monarch"
 
-go.property("init_monarch", hash("splash_screen"))
+go.property("init_monarch", hash("pre_splash"))
 
+local msg_init_monarch = hash("init_monarch")
 local msg_preload = hash("preload")
-local msg_room_menu = hash("rm_menu")
-local msg_dialogue = hash("pu_dialogue")
+local msg_dialogue = hash("dialogue")
+local msg_room_menu = hash("room_menu")
+local msg_change_room = hash("change_room")
+
 
 function init(self)
 	--monarch.debug()
@@ -23,10 +26,12 @@ function on_message(self, message_id, message, sender)
 		
 	elseif message_id == msg_dialogue then
 		local dialogue = message
-		monarch.show("pu_dialogue", nil, dialogue)
+		monarch.show("dialogue", {}, dialogue)
 		
-	elseif message_id == msg_room_menu then
-		monarch.show("rm_menu", { clear = true })
+	elseif message_id == msg_change_room then
+		local room = message.room
+		local is_it_menu = (room == "rm_menu") and {clear=true} or nil
+		monarch.show(room, is_it_menu)
 		
 	end
 end
